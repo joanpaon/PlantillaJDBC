@@ -17,6 +17,7 @@ package org.japo.java.app;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import org.japo.java.entities.DataAccessManager;
 import org.japo.java.libraries.UtilesBD;
 
@@ -31,8 +32,9 @@ public class App {
         System.out.println("Iniciando acceso a la Base de Datos ...");
         System.out.println("---");
 
-        // Conexión BBDD
-        try (Connection con = UtilesBD.obtenerConexion()) {
+        // Conexión BBDD + Ejecutor SQL
+        try (Connection con = UtilesBD.obtenerConexion();
+                Statement stmt = con.createStatement()) {
             // Mensaje Informativo
             System.out.println("Acceso a la Base de Datos INICIADO");
             System.out.println("---");
@@ -41,6 +43,7 @@ public class App {
             DataAccessManager dam = new DataAccessManager(con);
 
             // Lógica Aplicación
+            System.out.println("Esta es la lógica de la aplicación");
             
             // Mensaje Informativo
             System.out.println("---");

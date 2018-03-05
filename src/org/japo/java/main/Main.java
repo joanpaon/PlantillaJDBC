@@ -17,22 +17,17 @@ package org.japo.java.main;
 
 import org.japo.java.app.App;
 
-
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         // Crear aplicación
         App app = new App();
-        
+
         // Lanzar aplicacion
         app.launchApp();
     }
-    
 }

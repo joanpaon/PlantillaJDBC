@@ -27,9 +27,9 @@ import java.sql.Statement;
 public class DataAccessManager {
 
     // Sentencias SQL
-    private static final String DEF_SQL_MOD = "SELECT * FROM modulo";
-    private static final String DEF_SQL_ALU = "SELECT * FROM alumno";
-    private static final String DEF_SQL_PRO = "SELECT * FROM profesor";
+    private static final String DEF_SQL_MOD1 = "SELECT * FROM modulo";
+    private static final String DEF_SQL_ALU1 = "SELECT * FROM alumno";
+    private static final String DEF_SQL_PRO1 = "SELECT * FROM profesor";
 
     // Cabecera Módulos
     private static final String CAB_LST_MOD1
@@ -81,62 +81,4 @@ public class DataAccessManager {
         this.stmt = stmt;
     }
     // --- Accesores ---
-
-    // Módulos BD >> Módulos Listado
-    public final void listarModulos() throws SQLException {
-        listarModulos(stmt, DEF_SQL_MOD);
-    }
-
-    // Módulos BD >> Módulos Listado
-    private void listarModulos(Statement stmt, String sql) throws SQLException {
-        // Proceso de listado
-        try (ResultSet rs = stmt.executeQuery(sql)) {
-            // Mensaje de inicio de listado
-            System.out.println("Listado de módulos ...");
-
-            // Separación
-            System.out.println("---");
-
-            // Comprueba si hay datos
-            if (rs.next()) {
-                // Cabecera
-                System.out.println(CAB_LST_MOD1);
-                System.out.println(CAB_LST_MOD2);
-
-                // Generación del informe - Fila a fila
-                do {
-                    // Línea de texto con los datos de la fila actual
-                    // Los campos se refieren por su nombre o por su posición
-                    // Por su nombre, debe ser exactamente el mismo en la tabla
-                    // Por su posición, los campos se numeran a partir de 1
-                    String fila = String.format("%03d ", rs.getRow());
-                    String id = String.format("%-11d ", rs.getInt("id"));
-                    String acronimo = String.format("%-10s ", rs.getString("acronimo"));
-                    String nombre = String.format("%-25s ", rs.getString("nombre"));
-                    String codigo = String.format("%-10s ", rs.getString("codigo"));
-                    String horas = String.format("%4d ", rs.getInt("horasCurso"));
-                    String curso = String.format("%4d", rs.getInt("curso"));
-                    System.out.println(fila + id + acronimo + nombre + codigo + horas + curso);
-
-                    // Línea de texto con los datos de la fila actual
-                    // Los campos se refieren por su nombre o por su posición
-                    // Por su nombre, debe ser exactamente el mismo en la tabla
-                    // Por su posición, los campos se numeran a partir de 1
-//                    System.out.println(
-//                            String.format("%03d ", rs.getRow())
-//                            + String.format("%-11d ", rs.getInt("id"))
-//                            + String.format("%-10s ", rs.getString("acronimo"))
-//                            + String.format("%-25s ", rs.getString("nombre"))
-//                            + String.format("%-10s ", rs.getString("codigo"))
-//                            + String.format("%4d ", rs.getInt("horasCurso"))
-//                            + String.format("%4d", rs.getInt("curso")));
-                } while (rs.next());
-            } else {
-                System.out.println("No hay módulos que mostrar ...");
-            }
-
-            // Separación
-            System.out.println("---");
-        }
-    }
 }
