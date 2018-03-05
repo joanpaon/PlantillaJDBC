@@ -16,8 +16,6 @@
 package org.japo.java.entities;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -27,9 +25,9 @@ import java.sql.Statement;
 public class DataAccessManager {
 
     // Sentencias SQL
-    private static final String DEF_SQL_MOD1 = "SELECT * FROM modulo";
-    private static final String DEF_SQL_ALU1 = "SELECT * FROM alumno";
-    private static final String DEF_SQL_PRO1 = "SELECT * FROM profesor";
+    private static final String DEF_MOD_SQL1 = "SELECT * FROM modulo";
+    private static final String DEF_ALU_SQL1 = "SELECT * FROM alumno";
+    private static final String DEF_PRF_SQL1 = "SELECT * FROM profesor";
 
     // Cabecera Módulos
     private static final String CAB_LST_MOD1
