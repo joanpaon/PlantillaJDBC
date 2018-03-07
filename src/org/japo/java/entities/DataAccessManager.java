@@ -24,9 +24,14 @@ import java.sql.Statement;
  */
 public class DataAccessManager {
 
-    // Sentencias SQL
+    // Sentencias SQL - Módulos
     private static final String DEF_MOD_SQL1 = "SELECT * FROM modulo";
+    private static final String DEF_MOD_SQL2 = "DELETE FROM modulo WHERE acronimo='SI'";
+
+    // Sentencias SQL - Alumnos
     private static final String DEF_ALU_SQL1 = "SELECT * FROM alumno";
+
+    // Sentencias SQL - Profesores
     private static final String DEF_PRF_SQL1 = "SELECT * FROM profesor";
 
     // Cabecera Módulos
