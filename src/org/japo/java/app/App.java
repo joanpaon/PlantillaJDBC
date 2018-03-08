@@ -30,12 +30,12 @@ public class App {
     public void launchApp() {
         // Mensaje Informativo
         System.out.println("Iniciando acceso a la Base de Datos ...");
-        System.out.println("---");
 
         // Conexión BBDD + Ejecutor SQL
         try (Connection con = UtilesBD.obtenerConexion();
                 Statement stmt = con.createStatement()) {
             // Mensaje Informativo
+            System.out.println("---");
             System.out.println("Acceso a la Base de Datos INICIADO");
             System.out.println("---");
 
@@ -44,11 +44,12 @@ public class App {
 
             // Lógica Aplicación
             System.out.println("Esta es la lógica de la aplicación");
-            
+
             // Mensaje Informativo
             System.out.println("---");
             System.out.println("Acceso a la Base de Datos FINALIZADO");
         } catch (SQLException e) {
+            System.out.println("---");
             System.out.println("ERROR: Acceso a la Base de Datos CANCELADO");
             System.out.printf("Código de error .: %d%n", e.getErrorCode());
             System.out.printf("Estado SQL ......: %s%n", e.getSQLState());

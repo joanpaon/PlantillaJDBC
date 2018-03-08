@@ -20,6 +20,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.japo.java.libraries.UtilesEntrada;
 
 /**
  *
@@ -36,6 +37,7 @@ public class DataAccessManager {
             + "VALUES "
             + "(1234, 'SI', 'Sistemas Informáticos', '0482', 96, 1)";
     private static final String DEF_MOD_SQL4 = "UPDATE modulo SET curso=2 WHERE horasCurso<100";
+    private static final String DEF_MOD_SQL5 = "SELECT * FROM modulo WHERE id='%s'";
 
     // Sentencias SQL - Alumnos
     private static final String DEF_ALU_SQL1 = "SELECT * FROM alumno";
@@ -60,6 +62,10 @@ public class DataAccessManager {
             = " #  ";
     private static final String CAB_LST_PRO2
             = "=== ";
+
+    // Cabecera Registro Modulo
+    private static final String CAB_REG_MOD1 = "Proceso de BORRADO de Módulos - Registro %03d";
+    private static final String CAB_REG_MOD2 = "============================================";
 
     // Referencias
     private Connection con;
@@ -170,6 +176,91 @@ public class DataAccessManager {
         }
     }
 
+    // Módulos BD >> Módulos Listado Interactivo
+    public final void listarModulos(int lineasPagina) throws SQLException {
+        // Comprueba Lineas de Paginación
+        if (lineasPagina > 0) {
+            // Mensaje de inicio de listado
+            System.out.println("Listado de módulos ...");
+            System.out.println("---");
+
+            // Proceso de listado
+            try (ResultSet rs = stmt.executeQuery(DEF_MOD_SQL1)) {
+                // Comprueba si hay datos
+                if (rs.next()) {
+                    //<editor-fold defaultstate="collapsed" desc="Bucle Recorrido Registros">
+                    // Bucle Recorrido Registros
+                    boolean nuevoRegistroOK;
+                    int lineaAct = 1;
+                    int paginaAct = 1;
+                    do {
+                        // Cabecera
+                        System.out.printf("Página ...: %02d%n", paginaAct);
+                        System.out.println("--------------");
+                        System.out.println(CAB_LST_MOD1);
+                        System.out.println(CAB_LST_MOD2);
+
+                        //<editor-fold defaultstate="collapsed" desc="Bucle Recorrido Página">
+                        // Bucle Recorrido Página
+                        do {
+                            // Extraer Datos Fila Actual
+                            int numRegistro = rs.getRow();
+                            int id = rs.getInt("id");
+                            String acronimo = rs.getString("acronimo");
+                            String nombre = rs.getString("nombre");
+                            String codigo = rs.getString("codigo");
+                            int horas = rs.getInt("horasCurso");
+                            int curso = rs.getInt("curso");
+
+                            // Mostrar Datos Fila/Linea Actual
+                            System.out.printf("%03d %-11d %-10s %-25s %-10s %4d %4d%n",
+                                    numRegistro, id, acronimo, nombre, codigo, horas, curso);
+
+                            // Actualiza Linea Actual
+                            lineaAct++;
+
+                            // Nuevo Registro
+                            nuevoRegistroOK = rs.next();
+                        } while (lineaAct <= lineasPagina && nuevoRegistroOK);
+                        //</editor-fold>
+
+                        //<editor-fold defaultstate="collapsed" desc="Análisis Fin Página">
+                        // Análisis Fin Página
+                        if (nuevoRegistroOK) {
+                            // Separación
+                            System.out.println("---");
+
+                            // Confirmación
+                            char respuesta = UtilesEntrada.leerOpcion(
+                                    "SsNn",
+                                    "Siguiente Página (S/N) ...: ",
+                                    "ERROR: Entrada incorrecta");
+
+                            // Análisis Respuesta
+                            if (respuesta == 'S' || respuesta == 's') {
+                                paginaAct++;
+
+                                // Inicializa Paginación
+                                lineaAct = 1;
+
+                                // Separación
+                                System.out.println("---");
+                            } else {
+                                nuevoRegistroOK = false;
+                            }
+                        }
+                        //</editor-fold>
+                    } while (nuevoRegistroOK);
+                    //</editor-fold>
+                } else {
+                    System.out.println("No hay módulos que mostrar ...");
+                }
+            }
+        } else {
+            listarModulos();
+        }
+    }
+
     // Módulos BD >> Módulos Eliminación
     public void borrarModulos() throws SQLException {
         // Mensaje de inicio de listado
@@ -183,6 +274,60 @@ public class DataAccessManager {
 
         // Muestra las filas borradas
         System.out.println(filas + " fila/s borrada/s");
+    }
+
+    // Módulos BD >> Módulos Eliminación
+    public void borrarModulosInteractivo() throws SQLException {
+        // Mensaje de inicio de Borrado
+        System.out.println("Borrado de módulos ...");
+        System.out.println("---");
+
+        // Proceso de Borrado
+        try (ResultSet rs = stmt.executeQuery(DEF_MOD_SQL1)) {
+            // Contador Registros Borrados
+            int regBorrados = 0;
+
+            // Recorrido de Registros
+            while (rs.next()) {
+                // Cabecera
+                System.out.printf(CAB_REG_MOD1 + "%n", rs.getRow());
+                System.out.println(CAB_REG_MOD2);
+
+                // Mostrar Módulo Actual
+                System.out.printf("Id .........: %d%n", rs.getInt("id"));
+                System.out.printf("Acrónimo ...: %s%n", rs.getString("acronimo"));
+                System.out.printf("Nombre .....: %s%n", rs.getString("nombre"));
+                System.out.printf("Código .....: %s%n", rs.getString("codigo"));
+                System.out.printf("Acrónimo ...: %d%n", rs.getInt("horasCurso"));
+                System.out.printf("Acrónimo ...: %d%n", rs.getInt("curso"));
+                System.out.println("---");
+
+                // Confirmación
+                char respuesta = UtilesEntrada.leerOpcion(
+                        "SsNn",
+                        "Borrar Módulo (S/N) ...: ",
+                        "ERROR: Entrada incorrecta");
+
+                // Análisis Respuesta
+                if (respuesta == 'S' || respuesta == 's') {
+                    // Borrado Modulo
+                    rs.deleteRow();
+
+                    // Actualiza Contador
+                    regBorrados++;
+
+                    // Mensaje Borrado
+                    System.out.println("---");
+                    System.out.println("Módulo actual borrado ...");
+                }
+
+                // Separador
+                System.out.println("---");
+            }
+
+            // Muestra las filas borradas
+            System.out.printf("Se han borrado %d módulos%n", regBorrados);
+        }
     }
 
     // Módulos BD >> Módulos Inserción
@@ -200,6 +345,53 @@ public class DataAccessManager {
         System.out.println(filas + " fila/s insertadas/s");
     }
 
+    // Módulos Usuario >> Módulos BD
+    public void insertarModulosInteractivo() throws SQLException {
+        // Mensaje de inicio de Inserción
+        System.out.println("Inserción de módulos ...");
+        System.out.println("---");
+
+        // Proceso de Inserción
+        try (ResultSet rs = stmt.executeQuery(DEF_MOD_SQL1)) {
+            // Posicionar Fila Inserción
+            rs.moveToInsertRow();
+
+            // Trasvase de Datos
+            rs.updateInt(1, UtilesEntrada.leerEntero("Id .........: ", "ERROR: Entrada incorrecta"));
+            rs.updateString(2, UtilesEntrada.leerTexto("Acrónimo ...: "));
+            rs.updateString(3, UtilesEntrada.leerTexto("Nombre .....: "));
+            rs.updateString(4, UtilesEntrada.leerTexto("Código .....: "));
+            rs.updateInt(5, UtilesEntrada.leerEntero("Horas ......: ", "ERROR: Entrada incorrecta"));
+            rs.updateInt(6, UtilesEntrada.leerEntero("Curso ......: ", "ERROR: Entrada incorrecta"));
+
+            // Separador
+            System.out.println("---");
+
+            // Confirmación
+            char respuesta = UtilesEntrada.leerOpcion(
+                    "SsNn",
+                    "Insertar Módulo (S/N) ...: ",
+                    "ERROR: Entrada incorrecta");
+
+            // Análisis Respuesta
+            if (respuesta == 'S' || respuesta == 's') {
+                // Inserción Modulo
+                rs.insertRow();
+
+                // Mensaje Informativo
+                System.out.println("---");
+                System.out.println("Inserción de datos COMPLETADA");
+            } else {
+                // Continuar Acceso
+                rs.moveToCurrentRow();
+
+                // Mensaje Informativo
+                System.out.println("---");
+                System.out.println("Inserción de datos CANCELADA");
+            }
+        }
+    }
+
     // Módulos BD >> Módulos Actualización
     public void modificarModulos() throws SQLException {
         // Mensaje de inicio de listado
@@ -213,5 +405,61 @@ public class DataAccessManager {
 
         // Muestra las filas borradas
         System.out.println(filas + " fila/s modificadas/s");
+    }
+
+    // Módulos BD >> Datos Usuario >> Módulos BD
+    public void modificarModulosInteractivo() throws SQLException {
+        // Mensaje de inicio de Inserción
+        System.out.println("Actualización de módulos ...");
+        System.out.println("---");
+
+        // Entrada Clave Búsqueda
+        int id = UtilesEntrada.leerEntero("Id búsqueda .: ", "ERROR: Entrada incorrecta");
+        System.out.println("---");
+
+        // Proceso de Actualización
+        try (ResultSet rs = stmt.executeQuery(String.format(DEF_MOD_SQL5, id + ""))) {
+            // Análisis Búsqueda
+            if (rs.next()) {
+                // Muestra Módulo encontrado
+                System.out.println("Registro Actual - Estado Inicial");
+                System.out.println("================================");
+                System.out.printf("Acrónimo ....: %s%n", rs.getString("acronimo"));
+                System.out.printf("Nombre ......: %s%n", rs.getString("nombre"));
+                System.out.printf("Código ......: %s%n", rs.getString("codigo"));
+                System.out.printf("Horas .......: %d%n", rs.getInt("horasCurso"));
+                System.out.printf("Curso .......: %d%n", rs.getInt("curso"));
+                System.out.println("---");
+
+                // Trasvase de Datos
+                System.out.println("Registro Actual - Estado Final");
+                System.out.println("==============================");
+                rs.updateString(2, UtilesEntrada.leerTexto("Acrónimo ....: "));
+                rs.updateString(3, UtilesEntrada.leerTexto("Nombre ......: "));
+                rs.updateString(4, UtilesEntrada.leerTexto("Código ......: "));
+                rs.updateInt(5, UtilesEntrada.leerEntero("Horas .......: ", "ERROR: Entrada incorrecta"));
+                rs.updateInt(6, UtilesEntrada.leerEntero("Curso .......: ", "ERROR: Entrada incorrecta"));
+                System.out.println("---");
+
+                // Confirmación
+                char respuesta = UtilesEntrada.leerOpcion(
+                        "SsNn",
+                        "Actualizar Módulo (S/N) ...: ",
+                        "ERROR: Entrada incorrecta");
+
+                // Separador
+                System.out.println("---");
+
+                // Análisis Respuesta
+                if (respuesta == 'S' || respuesta == 's') {
+                    rs.updateRow();
+                    System.out.println("Actualización de datos COMPLETADA");
+                } else {
+                    System.out.println("Actualización de datos CANCELADA");
+                }
+            } else {
+                System.out.println("ERROR: No hay datos asociados a la búsqueda");
+            }
+        }
     }
 }
