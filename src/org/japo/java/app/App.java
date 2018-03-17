@@ -35,7 +35,7 @@ public class App {
         // Conexión BBDD + Ejecutor SQL
         try (Connection con = UtilesBD.obtenerConexion();
                 Statement stmt = con.createStatement(
-                        ResultSet.TYPE_FORWARD_ONLY,
+                        ResultSet.TYPE_FORWARD_ONLY, 
                         ResultSet.CONCUR_UPDATABLE)) {
             // Mensaje Informativo
             System.out.println("---");
