@@ -19,6 +19,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 import org.japo.java.entities.DataAccessManager;
 import org.japo.java.libraries.UtilesBD;
 
@@ -27,36 +28,46 @@ import org.japo.java.libraries.UtilesBD;
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
 public class App {
+    // Propiedades Aplicación
+    private Properties prp;
 
+    // Constructor Parametrizado
+    public App(Properties prp) {
+        this.prp = prp;
+    }
+
+    // Lanzar Lógica Aplicación
     public void launchApp() {
         // Mensaje Informativo
         System.out.println("Iniciando acceso a la Base de Datos ...");
+        System.out.println("---");
 
         // Conexión BBDD + Ejecutor SQL
-        try (Connection con = UtilesBD.obtenerConexion();
+        try (Connection con = UtilesBD.obtenerConexion(prp);
                 Statement stmt = con.createStatement(
-                        ResultSet.TYPE_FORWARD_ONLY, 
+                        ResultSet.TYPE_FORWARD_ONLY,
                         ResultSet.CONCUR_UPDATABLE)) {
             // Mensaje Informativo
-            System.out.println("---");
             System.out.println("Acceso a la Base de Datos INICIADO");
             System.out.println("---");
 
             // Gestor Acceso Datos
+            System.out.println("Operaciones sobre la Base de Datos");
+            System.out.println("---");
             DataAccessManager dam = new DataAccessManager(con, stmt);
 
             // Lógica Aplicación
-            System.out.println("Esta es la lógica de la aplicación");
+            System.out.println("Ejecución de la Lógica de la Aplicación");
+            System.out.println("---");
 
             // Mensaje Informativo
-            System.out.println("---");
             System.out.println("Acceso a la Base de Datos FINALIZADO");
         } catch (SQLException e) {
-            System.out.println("---");
+//            System.out.println("---");
             System.out.println("ERROR: Acceso a la Base de Datos CANCELADO");
             System.out.printf("Código de error .: %d%n", e.getErrorCode());
             System.out.printf("Estado SQL ......: %s%n", e.getSQLState());
-            System.out.printf("Descripción .....: %s%n", e.getLocalizedMessage());
+            System.out.printf("Descripción .....: %s%n", e.getMessage());
         }
     }
 }

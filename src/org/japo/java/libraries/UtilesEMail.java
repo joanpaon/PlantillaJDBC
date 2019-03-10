@@ -1,5 +1,5 @@
-/* 
- * Copyright 2016 José A. Pacheco Ondoño - joanpaon@gmail.com.
+/*
+ * Copyright 2019 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.main;
-
-import java.util.Properties;
-import org.japo.java.app.App;
-import org.japo.java.libraries.UtilesApp;
+package org.japo.java.libraries;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class Main {
+public final class UtilesEMail {
 
-    public static void main(String[] args) {
-        // Propiedades App
-        Properties prp = UtilesApp.importarPropiedadesRecurso(
-                UtilesApp.DEF_RECURSO_PRP);
-        
-        // Crear aplicación
-        App app = new App(prp);
+    // Expresión Regular
+    public static final String ER_EMAIL = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
 
-        // Lanzar aplicacion
-        app.launchApp();
+    // Validar email
+    public static final boolean validarEMail(String email) {
+        return UtilesValidacion.validar(email, ER_EMAIL);
     }
 }

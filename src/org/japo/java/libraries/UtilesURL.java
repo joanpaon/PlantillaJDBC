@@ -1,5 +1,5 @@
-/* 
- * Copyright 2016 José A. Pacheco Ondoño - joanpaon@gmail.com.
+/*
+ * Copyright 2019 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.main;
-
-import java.util.Properties;
-import org.japo.java.app.App;
-import org.japo.java.libraries.UtilesApp;
+package org.japo.java.libraries;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class Main {
+public final class UtilesURL {
 
-    public static void main(String[] args) {
-        // Propiedades App
-        Properties prp = UtilesApp.importarPropiedadesRecurso(
-                UtilesApp.DEF_RECURSO_PRP);
-        
-        // Crear aplicación
-        App app = new App(prp);
+    // Expresión Regular
+    public static final String ER_URL = "^(https?://)?(([\\w!~*'().&=+$%-]+: )?[\\w!~*'().&=+$%-]+@)?(([0-9]{1,3}\\.){3}[0-9]{1,3}|([\\w!~*'()-]+\\.)*([\\w^-][\\w-]{0,61})?[\\w]\\.[a-z]{2,6})(:[0-9]{1,4})?((/*)|(/+[\\w!~*'().;?:@&=+$,%#-]+)+/*)$";
 
-        // Lanzar aplicacion
-        app.launchApp();
+    // Validar URL
+    public static final boolean validarURL(String url) {
+        return UtilesValidacion.validar(url, ER_URL);
     }
 }

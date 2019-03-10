@@ -31,25 +31,28 @@ public class UtilesBD {
     // Propiedades BBDD
     private static final String FICHERO_PRP = "db.properties";
 
-    // Propiedades Conexión 
-    public static final String PRP_PROT = "protocol";
-    public static final String PRP_HOST = "host";
-    public static final String PRP_PORT = "port";
-    public static final String PRP_DBAM = "db";
-    public static final String PRP_USER = "user";
-    public static final String PRP_PASS = "password";
+    // Valores Predeterminados Conexión BBDD
+    private static final String DEF_PROT = "jdbc:mysql";
+    private static final String DEF_HOST = "localhost";
+    private static final String DEF_PORT = "3306";
+    private static final String DEF_DBAM = "agenda";
+    private static final String DEF_USER = "usuario";
+    private static final String DEF_PASS = "usuario";
 
-    // Predeterminados Conexión [MySQL/MariaDB + agenda]
-    public static final String DEF_FORM_MYSQL = "%s://%s:%s/%s?user=%s&password=%s";
-    public static final String DEF_PROT_MYSQL = "jdbc:mysql";
-    public static final String DEF_HOST_MYSQL = "localhost";
-    public static final String DEF_PORT_MYSQL = "3306";
-    private static final String DEF_DBAM_MYSQL = "agenda";
-    private static final String DEF_USER_MYSQL = "usuario";
-    private static final String DEF_PASS_MYSQL = "usuario";
-    private static final String DEF_CONS_MYSQL = String.format(DEF_FORM_MYSQL,
-            DEF_PROT_MYSQL, DEF_HOST_MYSQL, DEF_PORT_MYSQL,
-            DEF_DBAM_MYSQL, DEF_USER_MYSQL, DEF_PASS_MYSQL);
+    // Propiedades Conexión BBDD
+    private static final String PRP_PROT = "protocol";
+    private static final String PRP_HOST = "host";
+    private static final String PRP_PORT = "port";
+    private static final String PRP_DBAM = "db";
+    private static final String PRP_USER = "user";
+    private static final String PRP_PASS = "password";
+
+    // Formato Conexión
+    private static final String FORMATO_CON = "%s://%s:%s/%s?user=%s&password=%s";
+
+    // Cadena Conexión  Predeterminada
+    private static final String DEF_CADENA_CON = String.format(
+            FORMATO_CON, DEF_PROT, DEF_HOST, DEF_PORT, DEF_DBAM, DEF_USER, DEF_PASS);
 
     // Obtiene Conexión con BD - Predeterminada
     public static final Connection obtenerConexion() throws SQLException {
@@ -67,7 +70,7 @@ public class UtilesBD {
             System.out.println("ERROR: Fichero Propiedades BD NO existe");
 
             // Obtener Conexión
-            con = obtenerConexion(DEF_CONS_MYSQL);
+            con = obtenerConexion(DEF_CADENA_CON);
         }
 
         // Devolver Conexión
@@ -85,7 +88,7 @@ public class UtilesBD {
             String user, String pass) throws SQLException {
         // Definir cadena de conexión
         String cadenaConexion = String.format(
-                DEF_FORM_MYSQL, prot, host, port, db, user, pass);
+                FORMATO_CON, prot, host, port, db, user, pass);
 
         // Realizar la conexión
         return obtenerConexion(cadenaConexion);
@@ -94,13 +97,14 @@ public class UtilesBD {
     // Obtiene Conexión con BD - Propiedades
     public static final Connection obtenerConexion(Properties prp) throws SQLException {
         // Definir cadena de conexión
-        String cadenaConexion = String.format(DEF_FORM_MYSQL,
-                prp.getProperty(PRP_PROT, DEF_PROT_MYSQL),
-                prp.getProperty(PRP_HOST, DEF_HOST_MYSQL),
-                prp.getProperty(PRP_PORT, DEF_PORT_MYSQL),
-                prp.getProperty(PRP_DBAM, DEF_DBAM_MYSQL),
-                prp.getProperty(PRP_USER, DEF_USER_MYSQL),
-                prp.getProperty(PRP_PASS, DEF_PASS_MYSQL));
+        String cadenaConexion = String.format(
+                FORMATO_CON,
+                prp.getProperty(PRP_PROT, DEF_PROT),
+                prp.getProperty(PRP_HOST, DEF_HOST),
+                prp.getProperty(PRP_PORT, DEF_PORT),
+                prp.getProperty(PRP_DBAM, DEF_DBAM),
+                prp.getProperty(PRP_USER, DEF_USER),
+                prp.getProperty(PRP_PASS, DEF_PASS));
 
         // Realizar la conexión
         return DriverManager.getConnection(cadenaConexion);
@@ -124,7 +128,7 @@ public class UtilesBD {
     }
 
     // SQL Date >> String (dd/MM/yyyy)
-    public static String convertirSQLDate2String(java.sql.Date sqlDate) {
+    public static final String convertirSQLDate2String(java.sql.Date sqlDate) {
         // Obtiene milisegundos de fecha
         long ms = sqlDate.getTime();
 

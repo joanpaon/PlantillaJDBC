@@ -40,6 +40,11 @@ public class UtilesIdioma {
     public static final String NOMBRE_ING = "Inglés";
     public static final String NOMBRE_ALE = "Alemán";
 
+    // Códigos de Idioma
+    public static final int[] LISTA_IDIOMAS = {
+        UtilesIdioma.CODIGO_ESP, UtilesIdioma.CODIGO_ING, UtilesIdioma.CODIGO_ALE
+    };
+
     // Dias - Español
     public static final String[] DIAS_ESP = {
         "Lunes", "Martes", "Miércoles", "Jueves",
@@ -49,7 +54,7 @@ public class UtilesIdioma {
     // Dias - Inglés
     public static final String[] DIAS_ING = {
         "Monday", "Tuesday", "Wednesday", "Thursday",
-        "Freeday", "Saturday", "Sunday"};
+        "Friday", "Saturday", "Sunday"};
 
     // Dias - Alemán
     public static final String[] DIAS_ALE = {
@@ -57,7 +62,7 @@ public class UtilesIdioma {
         "Freitag", "Samstag", "Sontag"};
 
     // ATENCION >>> Lunes: 1 - Domingo: 7 <<<
-    public static String generarNombreDia(int dia, int idioma) {
+    public static final String generarNombreDia(int dia, int idioma) {
         // Día actual
         String nombre;
 
@@ -86,5 +91,4 @@ public class UtilesIdioma {
         // Devuelve nombre
         return nombre;
     }
-
 }

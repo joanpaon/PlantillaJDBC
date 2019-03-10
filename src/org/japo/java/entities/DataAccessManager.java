@@ -224,10 +224,10 @@ public class DataAccessManager {
                             System.out.println("---");
 
                             // Confirmación
-                            char respuesta = UtilesEntrada.leerOpcion(
-                                    "SsNn",
+                            char respuesta = UtilesEntrada.leerCaracter(
                                     "Siguiente Página (S/N) ...: ",
-                                    "ERROR: Entrada incorrecta");
+                                    "ERROR: Entrada incorrecta",
+                                    "SsNn");
 
                             // Análisis Respuesta
                             if (respuesta == 'S' || respuesta == 's') {
@@ -276,10 +276,10 @@ public class DataAccessManager {
                 System.out.println("---");
 
                 // Confirmación
-                char respuesta = UtilesEntrada.leerOpcion(
-                        "SsNn",
+                char respuesta = UtilesEntrada.leerCaracter(
                         "Borrar Módulo (S/N) ...: ",
-                        "ERROR: Entrada incorrecta");
+                        "ERROR: Entrada incorrecta",
+                        "SsNn");
 
                 // Separador
                 System.out.println("---");
@@ -341,10 +341,10 @@ public class DataAccessManager {
                 // Interactividad
                 if (userOK) {
                     // Confirmación
-                    char respuesta = UtilesEntrada.leerOpcion(
-                            "SsNn",
+                    char respuesta = UtilesEntrada.leerCaracter(
                             "Borrar Módulo (S/N) ...: ",
-                            "ERROR: Entrada incorrecta");
+                            "ERROR: Entrada incorrecta",
+                            "SsNn");
 
                     // Análisis Respuesta
                     if (respuesta == 'S' || respuesta == 's') {
@@ -436,10 +436,10 @@ public class DataAccessManager {
                 System.out.println("---");
 
                 // Confirmación
-                char respuesta = UtilesEntrada.leerOpcion(
-                        "SsNn",
+                char respuesta = UtilesEntrada.leerCaracter(
                         "Insertar Módulo (S/N) ...: ",
-                        "ERROR: Entrada incorrecta");
+                        "ERROR: Entrada incorrecta",
+                        "SsNn");
 
                 // Análisis Respuesta
                 if (respuesta == 'S' || respuesta == 's') {
@@ -511,10 +511,10 @@ public class DataAccessManager {
                 System.out.println("---");
 
                 // Confirmación
-                char respuesta = UtilesEntrada.leerOpcion(
-                        "SsNn",
+                char respuesta = UtilesEntrada.leerCaracter(
                         "Actualizar Módulo (S/N) ...: ",
-                        "ERROR: Entrada incorrecta");
+                        "ERROR: Entrada incorrecta",
+                        "SsNn");
 
                 // Separador
                 System.out.println("---");
@@ -562,10 +562,10 @@ public class DataAccessManager {
                     System.out.println("---");
 
                     // Confirmación
-                    char respuesta = UtilesEntrada.leerOpcion(
-                            "SsNn",
+                    char respuesta = UtilesEntrada.leerCaracter(
                             "Insertar Módulo (S/N) ...: ",
-                            "ERROR: Entrada incorrecta");
+                            "ERROR: Entrada incorrecta",
+                            "SsNn");
 
                     // Separador
                     System.out.println("---");
