@@ -77,27 +77,27 @@ public class DataAccessManager {
     private static final String CAB_REG_MOD2 = "============================================";
 
     // Referencias
-    private Connection con;
+    private Connection conn;
     private Statement stmt;
 
     // Constructor - Connection
     public DataAccessManager(Connection con) {
-        this.con = con;
+        this.conn = con;
     }
 
     // Constructor - Connection + Statement
-    public DataAccessManager(Connection con, Statement stmt) {
-        this.con = con;
+    public DataAccessManager(Connection conn, Statement stmt) {
+        this.conn = conn;
         this.stmt = stmt;
     }
 
     // --- Accesores ---
-    public Connection getCon() {
-        return con;
+    public Connection getConn() {
+        return conn;
     }
 
-    public void setCon(Connection con) {
-        this.con = con;
+    public void setConn(Connection conn) {
+        this.conn = conn;
     }
 
     public Statement getStmt() {
@@ -112,7 +112,7 @@ public class DataAccessManager {
     // Metadatos BD >> Pantalla
     public final void mostrarMetadatos() throws SQLException {
         // Metadatos de la base de datos
-        DatabaseMetaData dmd = con.getMetaData();
+        DatabaseMetaData dmd = conn.getMetaData();
 
         // Cabecera
         System.out.println("Información");
@@ -548,7 +548,7 @@ public class DataAccessManager {
             if (rs.next()) {
                 System.out.println("ERROR: Ya existe el módulo a insertar");
             } else {
-                try (PreparedStatement pstmt = con.prepareStatement(DEF_MOD_SQL6)) {
+                try (PreparedStatement pstmt = conn.prepareStatement(DEF_MOD_SQL6)) {
                     // Registros Insertados
                     int numReg = 0;
 
