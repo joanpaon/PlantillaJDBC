@@ -43,8 +43,8 @@ public class App {
         System.out.println("---");
 
         // Conexión BBDD + Ejecutor SQL
-        try (Connection con = UtilesBD.obtenerConexion(prp);
-                Statement stmt = con.createStatement(
+        try (Connection conn = UtilesBD.obtenerConexion(prp);
+                Statement stmt = conn.createStatement(
                         ResultSet.TYPE_FORWARD_ONLY,
                         ResultSet.CONCUR_UPDATABLE)) {
             // Mensaje Informativo
@@ -54,7 +54,7 @@ public class App {
             // Gestor Acceso Datos
             System.out.println("Operaciones sobre la Base de Datos");
             System.out.println("---");
-            DataAccessManager dam = new DataAccessManager(con, stmt);
+            DataAccessManager dam = new DataAccessManager(conn, stmt);
 
             // Lógica Aplicación
             System.out.println("Ejecución de la Lógica de la Aplicación");
@@ -63,11 +63,12 @@ public class App {
             // Mensaje Informativo
             System.out.println("Acceso a la Base de Datos FINALIZADO");
         } catch (SQLException e) {
-//            System.out.println("---");
             System.out.println("ERROR: Acceso a la Base de Datos CANCELADO");
             System.out.printf("Código de error .: %d%n", e.getErrorCode());
             System.out.printf("Estado SQL ......: %s%n", e.getSQLState());
             System.out.printf("Descripción .....: %s%n", e.getMessage());
+        } catch (Exception e) {
+            System.out.printf("ERROR: Aplicación finalizada - %s%n", e.getMessage());
         }
     }
 }
