@@ -27,8 +27,7 @@ public class Main {
 
     public static void main(String[] args) {
         // Propiedades App
-        Properties prp = UtilesApp.importarPropiedadesRecurso(
-                UtilesApp.DEF_RECURSO_PRP);
+        Properties prp = UtilesApp.importarPropiedadesRecurso();
         
         // Crear aplicación
         App app = new App(prp);

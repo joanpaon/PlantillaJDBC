@@ -83,6 +83,11 @@ public class UtilesApp {
         return prp;
     }
 
+    // Recurso Propiedades ( Predefinido ) > Objeto Propiedades
+    public static final Properties importarPropiedadesRecurso() {
+        return importarPropiedadesRecurso(DEF_RECURSO_PRP);
+    }
+
     // Fichero Propiedades XML > Objeto Propiedades
     public static final Properties importarPropiedadesXML(String fichero) {
         // Objeto de Propiedades Vacio
