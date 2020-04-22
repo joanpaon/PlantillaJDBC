@@ -1,5 +1,5 @@
 /* 
- * Copyright 2017 José A. Pacheco Ondoño - joanpaon@gmail.com.
+ * Copyright 2019 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@ package org.japo.java.libraries;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Image;
@@ -33,6 +32,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -48,7 +49,7 @@ import javax.swing.event.ChangeListener;
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class UtilesSwing {
+public final class UtilesSwing {
 
     // Perfiles LnF
     public static final String LNF_WINDOWS_PROFILE = "Windows";
@@ -70,12 +71,25 @@ public class UtilesSwing {
     public static final String LNF_METAL_CLASSNAME = "javax.swing.plaf.metal.MetalLookAndFeel";
     public static final String LNF_NIMBUS_CLASSNAME = "javax.swing.plaf.nimbus.NimbusLookAndFeel";
 
+    // Fuentes Lucida (JRE)
+    public static final String FONT_LUCIDA_SANS_NAME = "Lucida Sans";
+    public static final String FONT_LUCIDA_TYPEWRITER_NAME = "Lucida Sans Typewriter";
+    public static final String FONT_LUCIDA_BRIGHT_NAME = "Lucida Bright";
+
+    // Fuentes Lógicas
+    public static final String FONT_LOGICAL_SERIF_NAME = Font.SERIF;
+    public static final String FONT_LOGICAL_SANS_NAME = Font.SANS_SERIF;
+    public static final String FONT_LOGICAL_MONO_NAME = Font.MONOSPACED;
+    public static final String FONT_LOGICAL_DIALOG_NAME = Font.DIALOG;
+    public static final String FONT_LOGICAL_INPUT_NAME = Font.DIALOG_INPUT;
+
     // Fuente Predeterminada
     public static final String DEF_FONT_FAMILY = Font.SANS_SERIF;
     public static final int DEF_FONT_STYLE = Font.PLAIN;
     public static final int DEF_FONT_SIZE = 12;
+    public static final Font DEF_FONT = new Font(DEF_FONT_FAMILY, DEF_FONT_STYLE, DEF_FONT_SIZE);
 
-    // Cerrar programa
+    // Cerrar Programa Swing
     public static final void terminarPrograma(JFrame f) {
         // Oculta la ventana
         f.setVisible(false);
@@ -132,15 +146,15 @@ public class UtilesSwing {
     }
 
     // Establecer LnF - Nombre de Perfil
-    public static final void establecerLnFProfile(String lnfProfile) {
-        if (lnfProfile.equalsIgnoreCase(LNF_SYSTEM_PROFILE)) {
+    public static final void establecerLnFProfile(String profile) {
+        if (profile.equalsIgnoreCase(LNF_SYSTEM_PROFILE)) {
             establecerLnFSistema();
-        } else if (lnfProfile.equalsIgnoreCase(LNF_CROSS_PLATFORM_PROFILE)) {
+        } else if (profile.equalsIgnoreCase(LNF_CROSS_PLATFORM_PROFILE)) {
             establecerLnFCrossPlatform();
         } else {
             try {
                 for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                    if (lnfProfile.equalsIgnoreCase(info.getName())) {
+                    if (profile.equalsIgnoreCase(info.getName())) {
                         UIManager.setLookAndFeel(info.getClassName());
                     }
                 }
@@ -197,6 +211,22 @@ public class UtilesSwing {
         }
     }
 
+    // Image ( Tamaño INI ) > Image ( Tamaño FIN )
+    public static Image escalarImagen(Image imgIni, int ancAct, int altAct) {
+        // Imagen Original
+        Image imgFin;
+
+        // Reescalado
+        try {
+            imgFin = imgIni.getScaledInstance(ancAct, altAct, Image.SCALE_FAST);
+        } catch (Exception e) {
+            imgFin = imgIni;
+        }
+
+        // Imagen Reescalada
+        return imgFin;
+    }
+
     // Escalar Image > Etiqueta
     public static void escalarImagenEtiqueta(JLabel lblAct, Image imgIni, int ancAct, int altAct) {
         try {
@@ -213,7 +243,7 @@ public class UtilesSwing {
     // Portapapeles >> Texto
     public static final String importarTextoPortapapeles() {
         // Referencia al texto del portapapeles
-        String result = "";
+        String texto = "";
 
         try {
             // Acceso al portapapeles
@@ -224,13 +254,13 @@ public class UtilesSwing {
             Transferable contents = clipboard.getContents(null);
 
             // Extrae texto del portapapeles
-            result = (String) contents.getTransferData(DataFlavor.stringFlavor);
+            texto = (String) contents.getTransferData(DataFlavor.stringFlavor);
         } catch (HeadlessException | UnsupportedFlavorException | IOException e) {
             System.out.println("ERROR: Lectura del portapapeles");
         }
 
         // Texto extraido
-        return result;
+        return texto;
     }
 
     // Texto >> Portapapeles
@@ -303,6 +333,7 @@ public class UtilesSwing {
                 getAvailableFontFamilyNames();
     }
 
+    // Selecciona Elemento Combo por Programa sin activar Listeners
     public static final void establecerElementoCombo(JComboBox<String> cbbActual, String item) {
         // Captura los escuchadores del combo
         ActionListener[] lista = cbbActual.getActionListeners();
@@ -322,15 +353,15 @@ public class UtilesSwing {
     }
 
     // Asignar Favicon Ventana
-    public static final void establecerFavicon(JFrame ventana, String rutaFavicon) {
+    public static final void establecerFavicon(JFrame ventana, String recurso) {
         try {
             // Ruta Favicon > URL Favicon
-            URL urlICN = ClassLoader.getSystemResource(rutaFavicon);
+            URL urlICN = ClassLoader.getSystemResource(recurso);
 
             // URL Favicon > Ventana Favicon
             ventana.setIconImage(new ImageIcon(urlICN).getImage());
         } catch (Exception e) {
-            System.out.println("ERROR: Instalación del icono de la ventana");
+            System.out.println("ERROR: Favicon no instalado");
         }
     }
 
@@ -341,10 +372,9 @@ public class UtilesSwing {
 
         // Cargar Fuente
         try (InputStream is = new FileInputStream(fichero)) {
-            f = Font.createFont(Font.TRUETYPE_FONT, is).
-                    deriveFont(DEF_FONT_STYLE, DEF_FONT_SIZE);
-        } catch (FontFormatException | IOException e) {
-            f = new Font(DEF_FONT_FAMILY, DEF_FONT_STYLE, DEF_FONT_SIZE);
+            f = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (Exception e) {
+            f = null;
         }
 
         // Devuelve fuente
@@ -358,14 +388,89 @@ public class UtilesSwing {
 
         // Cargar Fuente
         try (InputStream is = ClassLoader.getSystemResourceAsStream(recurso)) {
-            f = Font.createFont(Font.TRUETYPE_FONT, is).
-                    deriveFont(DEF_FONT_STYLE, DEF_FONT_SIZE);
-        } catch (FontFormatException | IOException e) {
-            f = new Font(DEF_FONT_FAMILY, DEF_FONT_STYLE, DEF_FONT_SIZE);
+            f = Font.createFont(Font.TRUETYPE_FONT, is);
+        } catch (Exception e) {
+            f = null;
         }
 
         // Devuelve fuente
         return f;
+    }
+
+    // Fuente Original ( null ) > Fuente Derivada ( Estilo )
+    public static final Font derivarFuente(Font fuente, int estilo) {
+        return fuente == null || !(fuente instanceof Font) ? null
+                : fuente.deriveFont(estilo);
+    }
+
+    // Fuente Original ( null ) > Fuente Derivada ( Talla )
+    public static final Font derivarFuente(Font fuente, float talla) {
+        return fuente == null || !(fuente instanceof Font) ? null
+                : fuente.deriveFont(talla);
+    }
+
+    // Fuente Original ( null ) > Fuente Derivada ( Estilo + Talla )
+    public static final Font derivarFuente(Font fuente, int estilo, float talla) {
+        return fuente == null || !(fuente instanceof Font) ? null
+                : fuente.deriveFont(estilo, talla);
+    }
+
+    // Fuente ( Fichero | Sistema | Lógica ) + Estilo + Talla > Fuente
+    public static final Font generarFuenteFichero(String fichero,
+            int estilo, float talla, String fuenteSistema, String fuenteLogica) {
+        // Fichero > Fuente
+        Font fuente = importarFuenteFichero(fichero);
+
+        // Comprobar Fuente
+        if (fuente != null) {
+            fuente = fuente.deriveFont(estilo, talla);
+        } else if (validarFuenteSistema(fuenteSistema)) {
+            fuente = new Font(fuenteSistema, estilo, (int) talla);
+        } else {
+            fuente = new Font(fuenteLogica, estilo, (int) talla);
+        }
+
+        // Devolver Fuente
+        return fuente;
+    }
+
+    // Fuente ( Fichero | Sistema | Lógica ) + Estilo + Talla > Fuente
+    public static final Font generarFuenteFichero(String fichero,
+            String fuenteSistema, String fuenteLogica) {
+        return generarFuenteFichero(fichero, DEF_FONT_STYLE, DEF_FONT_STYLE,
+                fuenteSistema, fuenteLogica);
+    }
+
+    // Fuente ( Recurso | Sistema | Lógica ) + Estilo + Talla > Fuente
+    public static final Font generarFuenteRecurso(String recurso,
+            int estilo, float talla, String fuenteSistema, String fuenteLogica) {
+        // Fichero > Fuente
+        Font fuente = importarFuenteRecurso(recurso);
+
+        // Comprobar Fuente
+        if (fuente != null) {
+            fuente = fuente.deriveFont(estilo, talla);
+        } else if (validarFuenteSistema(fuenteSistema)) {
+            fuente = new Font(fuenteSistema, estilo, (int) talla);
+        } else {
+            fuente = new Font(fuenteLogica, estilo, (int) talla);
+        }
+
+        // Devolver Fuente
+        return fuente;
+    }
+
+    // Fuente ( Recurso | Sistema | Lógica ) > Fuente
+    public static final Font generarFuenteRecurso(String recurso,
+            String fuenteSistema, String fuenteLogica) {
+        return generarFuenteRecurso(recurso, DEF_FONT_STYLE, DEF_FONT_STYLE,
+                fuenteSistema, fuenteLogica);
+    }
+
+    // Fuente ( Recurso ) > Fuente
+    public static final Font generarFuenteRecurso(String recurso) {
+        return generarFuenteRecurso(recurso, DEF_FONT_STYLE, DEF_FONT_STYLE,
+                DEF_FONT_FAMILY, FONT_LOGICAL_SERIF_NAME);
     }
 
     // Campo de texto con DATO + ExpReg + Texto campo vacío
@@ -434,5 +539,105 @@ public class UtilesSwing {
     public static final boolean validarCampoFecha(
             JTextField txfActual, String textoCampoVacio) {
         return validarCampo(txfActual, UtilesFecha.ER_FECHA, textoCampoVacio);
+    }
+
+    // Fuente ?: Lista Fuentes Instaladas
+    public static final boolean validarFuenteSistema(String fuente) {
+        return UtilesArrays.buscar(obtenerTipografiasSistema(), fuente) != -1;
+    }
+
+    // Nombre Recurso > Image
+    public static final Image importarImagenRecurso(String recurso) {
+        // Referencia Imagen
+        Image img;
+
+        try {
+            // URL del Recurso
+            URL urlPpal = ClassLoader.getSystemResource(recurso);
+
+            // Imagen de la URL
+            img = new ImageIcon(urlPpal).getImage();
+
+        } catch (Exception e) {
+            img = new ImageIcon().getImage();
+        }
+
+        // Devuelve la imagen
+        return img;
+    }
+
+    // Nombre Recurso + Ancho + Alto +  > Image ( Reescalada )
+    public static final Image importarImagenRecurso(String recurso, int ancho, int alto) {
+        // Referencia Imagen
+        Image img;
+
+        try {
+            // URL del Recurso
+            URL urlPpal = ClassLoader.getSystemResource(recurso);
+
+            // Imagen de la URL
+            img = new ImageIcon(urlPpal).getImage();
+        } catch (Exception e) {
+            img = new ImageIcon().getImage();
+        }
+
+        // Reescalado de la Imagen
+        img = escalarImagen(img, ancho, alto);
+
+        // Devuelve la imagen
+        return img;
+    }
+
+    // ResultSet > Deslizador Navegación
+    public static final void actualizarDeslizadorNavegacion(JSlider sldActual,
+            JLabel lblActual, ResultSet rs) throws SQLException {
+        // Número Registros
+        int numeroTotalRegistros = UtilesBD.obtenerNumeroRegistros(rs);
+
+        // Numero Registro Actual
+        int numeroRegistroActual = UtilesBD.obtenerPosicionActual(rs);
+
+        // Guarda los gestores de eventos
+        ChangeListener[] lista = sldActual.getChangeListeners();
+
+        // Desconecta los ChangeListener definidos en tiempo de diseño
+        // Pero no los BeanBinding - Si se desconectan todos en enlazado
+        // NO FUNCIONA
+        for (ChangeListener cl : lista) {
+            // Obtiene la representación de texto del Listener
+            String texto = cl.toString();
+
+            // Ignora el listener si es BeanBinding
+            if (!texto.contains("org.jdesktop")) {
+                sldActual.removeChangeListener(cl);
+            }
+        }
+
+        // Actualiza Parámetros Deslizador
+        if (numeroTotalRegistros > 0) {
+            sldActual.setEnabled(true);
+            sldActual.setMinimum(1);                        // Change Listeners notificados
+            sldActual.setMaximum(numeroTotalRegistros);     // Change Listeners notificados
+            sldActual.setValue(numeroRegistroActual);       // Change Listeners notificados
+        } else {
+            sldActual.setEnabled(false);
+            sldActual.setMinimum(0);          // Change Listeners notificados
+            sldActual.setMaximum(0);          // Change Listeners notificados
+            sldActual.setValue(0);            // Change Listeners notificados
+        }
+
+        // Total de registros
+        lblActual.setText(numeroTotalRegistros + "");
+
+        // Conecta los ChangeListener desconectados
+        for (ChangeListener cl : lista) {
+            // Obtiene la representación de texto del Listener
+            String texto = cl.toString();
+
+            // Ignora el listener si es BeanBinding
+            if (!texto.contains("org.jdesktop")) {
+                sldActual.addChangeListener(cl);
+            }
+        }
     }
 }

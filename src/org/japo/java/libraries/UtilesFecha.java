@@ -1,5 +1,5 @@
-/* 
- * Copyright 2017 José A. Pacheco Ondoño - joanpaon@gmail.com.
+/*
+ * Copyright 2019 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,21 @@
  */
 package org.japo.java.libraries;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
 public final class UtilesFecha {
+
+    // Formato de fecha
+    public static final String FORMATO_FECHA = "dd/MM/yyyy";
 
     // Nombres de los dias de la semana
     public static final String[] NOMBRE_DIA = {
@@ -40,6 +45,15 @@ public final class UtilesFecha {
     // Nombres de las estaciones
     public static final String[] NOMBRE_ESTACION = {
         "primavera", "verano", "otoño", "invierno"};
+
+    // ExpReg - Hora - [ 0 - 23 ]
+    public static final String ER_HOR = "([01]\\d|2[0123])";
+
+    // ExpReg - Minutos - [ 0 - 59 ]
+    public static final String ER_MIN = "([012345]\\d)";
+
+    // ExpReg - Fecha
+    public static final String ER_HORA = ER_HOR + ":" + ER_MIN + ":" + ER_MIN;
 
     // ExpReg - Día del mes hasta 28 - [1..28] / [01..28]
     public static final String ER_DIA28 = "(0?[1-9]|1[0-9]|2[0-8])";
@@ -242,8 +256,118 @@ public final class UtilesFecha {
         return UtilesValidacion.validar(fecha, UtilesFecha.ER_FECHA);
     }
 
+    // Validación Fecha - Date [min..max]
+    public static final boolean validarFecha(Date d, Date min, Date max) {
+        return true
+                && d != null && min != null & max != null
+                && d.getTime() >= min.getTime() && d.getTime() <= max.getTime();
+    }
+
     // Comprobar si el año es bisiesto
     public static final boolean validarBisiesto(int any) {
         return any % 400 == 0 || any % 100 != 0 && any % 4 == 0;
+    }
+
+    // Calendar > Fecha dd/mm/aaaa ( String )
+    public static final String obtenerFecha(Calendar c) {
+        return c != null ? String.format("%02d/%02d/%d",
+                c.get(Calendar.DATE),
+                c.get(Calendar.MONTH),
+                c.get(Calendar.YEAR)) : "dd/mm/aaaa";
+    }
+
+    // Calendar > Hora hh:mm:ss ( String )
+    public static final String obtenerHora(Calendar c) {
+        return c != null ? String.format("%02d:%02d:%2d",
+                c.get(Calendar.HOUR_OF_DAY),
+                c.get(Calendar.MINUTE),
+                c.get(Calendar.SECOND)) : "hh:mm:ss";
+    }
+
+    // Date > Fecha dd/mm/aaaa ( String )
+    public static final String obtenerFecha(Date d) {
+        // Objeto Calendar
+        Calendar c = Calendar.getInstance();
+
+        // Date > Calendar
+        c.setTime(d);
+
+        // Representación Fecha
+        return UtilesFecha.obtenerFecha(c);
+    }
+
+    // Date > Hora hh:mm:ss ( String )
+    public static final String obtenerHora(Date d) {
+        // Objeto Calendar
+        Calendar c = Calendar.getInstance();
+
+        // Date > Calendar
+        c.setTime(d);
+
+        // Representación Fecha
+        return UtilesFecha.obtenerHora(c);
+    }
+
+    // Fecha ( String ) > Fecha ( Date )
+    public static final Date convertir(String fecha) {
+        return convertir(fecha, FORMATO_FECHA);
+    }
+
+    // Fecha ( String ) > Fecha ( Date ) - Formato Personalizado
+    public static final Date convertir(String fecha, String formato) {
+        // Referencia Fecha
+        Date d = null;
+
+        // Locale ESPAÑA
+        Locale lcl = new Locale("ES", "es");
+
+        try {
+            // Comprobación null
+            if (fecha == null || formato == null) {
+                throw new ParseException("Parámetros null", 0);
+            }
+
+            // Formateador de Fecha
+            SimpleDateFormat sdf = new SimpleDateFormat(formato, lcl);
+
+            // Convierte Fecha
+            d = sdf.parse(fecha);
+        } catch (ParseException e) {
+            System.out.println("ERROR: Conversión cancelada - " + e.getMessage());
+        }
+
+        // Devuelve Fecha Date
+        return d;
+    }
+
+    // Calcular dias entre fechas
+    public static final int obtenerDistancia(String fechaIni, String fechaFin) throws ParseException {
+        // Objetos Date
+        Date dateIni = convertir(fechaIni);
+        Date dateFin = convertir(fechaFin);
+
+        // Distancia Fechas >> ms
+        long ms = dateFin.getTime() - dateIni.getTime();
+
+        // ms >> dias
+        return (int) (ms / 1000 / 3600 / 24);
+
+//        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
+    // Calcular dias entre fechas
+    public static final String obtenerFechaHoy2() {
+        // Fecha del sistema
+        Calendar c = Calendar.getInstance();
+
+        // Representación texto
+        return String.format("%02d/%02d/%d",
+                c.get(Calendar.DATE),
+                c.get(Calendar.MONTH),
+                c.get(Calendar.YEAR));
+    }
+
+    public static final boolean validarHora(String hora) {
+        return UtilesValidacion.validar(hora, UtilesFecha.ER_HORA);
     }
 }

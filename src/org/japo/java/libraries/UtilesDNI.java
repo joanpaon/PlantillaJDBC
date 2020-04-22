@@ -1,5 +1,5 @@
 /* 
- * Copyright 2017 José A. Pacheco Ondoño - joanpaon@gmail.com.
+ * Copyright 2019 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,26 +81,30 @@ public final class UtilesDNI {
     }
 
     // Número DNI Extranjeros >> Número DNI Normalizado
-    public static final String normalizarNumero(String numDNI) throws Exception {
+    public static final String normalizarNumero(String numDNI) {
         // Número DNI Normalizado
         String numDNINorm;
 
         // Proceso Normalización
-        switch (numDNI.charAt(0)) {
-            case 'x':
-            case 'X':
-                numDNINorm = '0' + numDNI.substring(1);
-                break;
-            case 'y':
-            case 'Y':
-                numDNINorm = '1' + numDNI.substring(1);
-                break;
-            case 'z':
-            case 'Z':
-                numDNINorm = '2' + numDNI.substring(1);
-                break;
-            default:
-                numDNINorm = numDNI;
+        try {
+            switch (numDNI.charAt(0)) {
+                case 'x':
+                case 'X':
+                    numDNINorm = '0' + numDNI.substring(1);
+                    break;
+                case 'y':
+                case 'Y':
+                    numDNINorm = '1' + numDNI.substring(1);
+                    break;
+                case 'z':
+                case 'Z':
+                    numDNINorm = '2' + numDNI.substring(1);
+                    break;
+                default:
+                    numDNINorm = numDNI;
+            }
+        } catch (Exception e) {
+            numDNINorm = numDNI;
         }
 
         // Devuelve Resultado
@@ -129,7 +133,7 @@ public final class UtilesDNI {
         // Devolver DNI
         return "" + num + ctr;
     }
-    
+
     // Valida DNI - Formato texto
     public static final boolean validar(String dni) {
         return UtilesValidacion.validar(dni, ER_DNI);

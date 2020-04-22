@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 José A. Pacheco Ondoño - joanpaon@gmail.com.
+ * Copyright 2019 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -172,6 +172,30 @@ public final class UtilesArrays {
         return posicion;
     }
 
+    // Búsqueda Simple - String
+    public static final int buscar(String[] listaDatos, String clave) {
+        // Marcador de posición
+        int posicion = 0;
+
+        // Semáforo de Proceso de Búsqueda
+        boolean finBusquedaOK = false;
+
+        // Proceso de búsqueda
+        do {
+            if (posicion >= listaDatos.length) {
+                finBusquedaOK = true;
+                posicion = -1;
+            } else if (listaDatos[posicion].equals(clave)) {
+                finBusquedaOK = true;
+            } else {
+                posicion++;
+            }
+        } while (!finBusquedaOK);
+
+        // Posición de la clave en el array
+        return posicion;
+    }
+
     // Ordenación - Burbuja
     public static final void ordenarBurbuja(int[] lista) {
         for (int i = 0; i < lista.length - 1; i++) {
@@ -234,7 +258,7 @@ public final class UtilesArrays {
             lista[posRnd] = lista[i];
             lista[i] = aux;
         }
-        
+
         return lista;
     }
 
@@ -247,7 +271,7 @@ public final class UtilesArrays {
             lista[posRnd] = lista[i];
             lista[i] = aux;
         }
-        
+
         return lista;
     }
 
@@ -260,7 +284,7 @@ public final class UtilesArrays {
             lista[posRnd] = lista[i];
             lista[i] = aux;
         }
-        
+
         return lista;
     }
 
@@ -273,7 +297,7 @@ public final class UtilesArrays {
             lista[posRnd] = lista[i];
             lista[i] = aux;
         }
-        
+
         return lista;
     }
 
@@ -286,7 +310,7 @@ public final class UtilesArrays {
             lista[posRnd] = lista[i];
             lista[i] = aux;
         }
-        
+
         return lista;
     }
 
@@ -298,7 +322,7 @@ public final class UtilesArrays {
         // Recorrer a partir del segundo
         for (int actual = 1; actual < lista.length; actual++) {
             posicion = lista[actual] > lista[posicion] ? actual : posicion;
-}
+        }
 
         // Devolver posicion
         return posicion;
@@ -317,7 +341,8 @@ public final class UtilesArrays {
         // Devolver posicion
         return posicion;
     }
-    
+
+    // clave + lista > Número ocurrencias
     public static final int contarOcurrencias(int[] lista, int clave) {
         // Contador ocurrencias
         int contador = 0;

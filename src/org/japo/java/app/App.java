@@ -27,9 +27,10 @@ import org.japo.java.libraries.UtilesBD;
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class App {
+public final class App {
+
     // Propiedades Aplicación
-    private Properties prp;
+    private final Properties prp;
 
     // Constructor Parametrizado
     public App(Properties prp) {
@@ -43,9 +44,10 @@ public class App {
         System.out.println("---");
 
         // Conexión BBDD + Ejecutor SQL
-        try (Connection conn = UtilesBD.obtenerConexion(prp);
+        try (
+                Connection conn = UtilesBD.conectar(prp);
                 Statement stmt = conn.createStatement(
-                        ResultSet.TYPE_FORWARD_ONLY,
+                        ResultSet.TYPE_SCROLL_SENSITIVE,
                         ResultSet.CONCUR_UPDATABLE)) {
             // Mensaje Informativo
             System.out.println("Acceso a la Base de Datos INICIADO");

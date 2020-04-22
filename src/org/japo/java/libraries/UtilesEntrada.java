@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 José A. Pacheco Ondoño - joanpaon@gmail.com.
+ * Copyright 2019 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.Scanner;
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class UtilesEntrada {
+public final class UtilesEntrada {
 
     // Formatos Fecha
     public static final String FORMATO_FECHA01 = "dd/MM/yyyy";
@@ -35,10 +35,15 @@ public class UtilesEntrada {
     public static final String FORMATO_HORA01 = "hh:mm:ss";
 
     // Scanner + Codificación Windows
-    public static final Scanner SCN = new Scanner(System.in, "ISO-8859-1");
+    public static final Scanner SCN
+            = new Scanner(System.in, "Windows-1252")
+                    .useLocale(Locale.ENGLISH).useDelimiter("\\s+");
 
     // Locale Spanish
     public static final Locale LCL = new Locale("es", "ES");
+
+    // Mensaje de Error por Defecto
+    public static final String MSG_ERR = "ERROR: Entrada incorrecta";
 
     // Consola >> Entero
     public static final int leerEntero(String msgUsr, String msgErr) {
@@ -66,23 +71,28 @@ public class UtilesEntrada {
         return dato;
     }
 
+    // Consola >> Entero
+    public static final int leerEntero(String msgUsr) {
+        return leerEntero(msgUsr, MSG_ERR);
+    }
+
     // Consola >> Entero [min .. max]
     public static final int leerEntero(String msgUsr, String msgErr, int min, int max) {
-        // Numero a devolver
+        // Número a Devolver
         int dato;
 
-        // Semaforo validacion
+        // Semáforo Validación
         boolean rangoOK;
 
-        // Bucle Validacion
+        // Bucle Validación
         do {
             // Introducir Entero
             dato = leerEntero(msgUsr, msgErr);
 
-            // Validar Entero
+            // Validar Rango
             rangoOK = dato >= min && dato <= max;
 
-            // Mensaje de error
+            // Rango incorrecto >> Mensaje de error
             if (!rangoOK) {
                 System.out.println(msgErr);
             }
@@ -92,23 +102,28 @@ public class UtilesEntrada {
         return dato;
     }
 
+    // Consola >> Entero [min .. max]
+    public static final int leerEntero(String msgUsr, int min, int max) {
+        return leerEntero(msgUsr, MSG_ERR, min, max);
+    }
+
     // Consola >> Entero [Lista posibles Valores]
     public static final int leerEntero(String msgUsr, String msgErr, int lista[]) {
-        // Numero a devolver
+        // Número a Devolver
         int dato;
 
-        // Semaforo validacion
+        // Semáforo Validación
         boolean datoOK;
 
-        // Bucle Validacion
+        // Bucle Validación
         do {
             // Introducir Entero
             dato = UtilesEntrada.leerEntero(msgUsr, msgErr);
 
-            // Validar Entero
+            // Validar Existencia Entero
             datoOK = UtilesArrays.buscar(lista, dato) > -1;
 
-            // Mensaje de error
+            // Entero Inexistente > Mensaje de error
             if (!datoOK) {
                 System.out.println(msgErr);
             }
@@ -116,6 +131,11 @@ public class UtilesEntrada {
 
         // Devolver número
         return dato;
+    }
+
+    // Consola >> Entero [Lista posibles Valores]
+    public static final int leerEntero(String msgUsr, int lista[]) {
+        return leerEntero(msgUsr, MSG_ERR, lista);
     }
 
     // Consola >> Real
@@ -144,23 +164,28 @@ public class UtilesEntrada {
         return dato;
     }
 
+    // Consola >> Real
+    public static final double leerReal(String msgUsr) {
+        return leerReal(msgUsr, MSG_ERR);
+    }
+
     // Consola >> Real [min .. max]
     public static final double leerReal(String msgUsr, String msgErr, double min, double max) {
-        // Numero a devolver
+        // Número a Devolver
         double dato;
 
-        // Semaforo validacion
+        // Semáforo Validación
         boolean rangoOK;
 
-        // Bucle Validacion
+        // Bucle Validación
         do {
             // Introducir Entero
             dato = leerReal(msgUsr, msgErr);
 
-            // Validar Entero
+            // Validar Rango Entero
             rangoOK = dato >= min && dato <= max;
 
-            // Mensaje de error
+            // Rango Erróneo >> Mensaje de error
             if (!rangoOK) {
                 System.out.println(msgErr);
             }
@@ -170,23 +195,28 @@ public class UtilesEntrada {
         return dato;
     }
 
+    // Consola >> Real [min .. max]
+    public static final double leerReal(String msgUsr, double min, double max) {
+        return leerReal(msgUsr, MSG_ERR, min, max);
+    }
+
     // Consola >> Real [Lista posibles Valores]
     public static final double leerReal(String msgUsr, String msgErr, double lista[]) {
-        // Numero a devolver
+        // Número a Devolver
         double dato;
 
-        // Semaforo validacion
+        // Semáforo Validación
         boolean datoOK;
 
-        // Bucle Validacion
+        // Bucle Validación
         do {
             // Introducir Entero
             dato = UtilesEntrada.leerEntero(msgUsr, msgErr);
 
-            // Validar Entero
+            // Validar Existencia Entero
             datoOK = UtilesArrays.buscar(lista, dato) > -1;
 
-            // Mensaje de error
+            // Entero Inexistente >> Mensaje de error
             if (!datoOK) {
                 System.out.println(msgErr);
             }
@@ -194,6 +224,11 @@ public class UtilesEntrada {
 
         // Devolver número
         return dato;
+    }
+
+    // Consola >> Real [Lista posibles Valores]
+    public static final double leerReal(String msgUsr, double lista[]) {
+        return leerReal(msgUsr, MSG_ERR, lista);
     }
 
     // Consola >> Carácter
@@ -220,32 +255,26 @@ public class UtilesEntrada {
         return dato;
     }
 
-    // Consola >> Carácter [Lista posibles Opciones]
+    // Consola >> Carácter
+    public static final char leerCaracter(String msgUsr) {
+        return leerCaracter(msgUsr, MSG_ERR);
+    }
+
+    // Opciones + Consola > Opcion
     public static final char leerCaracter(String msgUsr, String msgErr, String opciones) {
-        // Dato a introducir
-        char dato = 0;
-
-        // Proceso de lectura
-        boolean lecturaOK = false;
+        char opcion;
+        boolean opcionOK = false;
         do {
-            try {
-                // Entrada dato
-                System.out.print(msgUsr);
-                dato = SCN.nextLine().charAt(0);
-
-                // Analisis Dato
-                if (opciones.contains(dato + "")) {
-                    lecturaOK = true;
-                } else {
-                    System.out.println(msgErr);
-                }
-            } catch (Exception e) {
+            opcion = leerCaracter(msgUsr, "");
+            if (opciones.contains(opcion + "")) {
+                opcionOK = true;
+            } else {
+                System.out.println("---");
                 System.out.println(msgErr);
+                System.out.println("---");
             }
-        } while (!lecturaOK);
-
-        // Devolver dato
-        return dato;
+        } while (!opcionOK);
+        return opcion;
     }
 
     // Consola >> Carácter [min .. max]
@@ -253,25 +282,30 @@ public class UtilesEntrada {
         // Dato a introducir
         char dato;
 
-        // Semaforo validacion
+        // Semáforo Validación
         boolean rangoOK;
 
-        // Bucle Validacion
+        // Bucle Validación
         do {
-            // Introducir Entero
+            // Introducir Caracter
             dato = leerCaracter(msgUsr, msgErr);
 
-            // Validar Entero
+            // Validar Rango Caracter
             rangoOK = dato >= min && dato <= max;
 
-            // Mensaje de error
+            // Rango Caracter Erróneo >> Mensaje de error
             if (!rangoOK) {
                 System.out.println(msgErr);
             }
         } while (!rangoOK);
 
-        // Devolver número
+        // Devolver carácter
         return dato;
+    }
+
+    // Consola >> Carácter [min .. max]
+    public static final char leerCaracter(String msgUsr, char min, char max) {
+        return leerCaracter(msgUsr, MSG_ERR, min, max);
     }
 
     // Consola >> Texto
@@ -282,29 +316,41 @@ public class UtilesEntrada {
 
     // Consola >> Calendar
     public static final Calendar leerDatoTemporal(
-            String patron, Locale locale, String msgUsr, String msgErr) {
+            String patron, Locale locale, String msgUsr, String msgErr, boolean modoEstrictoOK) {
         // Formateador
         SimpleDateFormat sdf = new SimpleDateFormat(patron, locale);
 
         // Referencia Calendar
         Calendar calendar = null;
 
-        // Intro + Parse
-        try {
-            // Consola >> Dato (Texto)
-            String texto = leerTexto(msgUsr);
+        // Bucle Validación
+        boolean datoOK = false;
+        do {
+            // Intro + Parse
+            try {
+                // Consola >> Dato (Texto)
+                String texto = leerTexto(msgUsr);
 
-            // Texto >> Date
-            Date date = sdf.parse(texto);
+                // Modo Estricto
+                if (!UtilesFecha.validarFecha(texto) && !UtilesFecha.validarHora(texto)) {
+                    throw new ParseException(msgErr, 0);
+                }
 
-            // Instancia Objeto Calendar
-            calendar = Calendar.getInstance();
+                // Texto >> Date
+                Date date = sdf.parse(texto);
 
-            // Date >> Calendar
-            calendar.setTime(date);
-        } catch (ParseException e) {
-            System.out.println(msgErr);
-        }
+                // Instancia Objeto Calendar
+                calendar = Calendar.getInstance();
+
+                // Date >> Calendar
+                calendar.setTime(date);
+
+                // Actualización Semáforo
+                datoOK = true;
+            } catch (ParseException e) {
+                System.out.println(msgErr);
+            }
+        } while (!datoOK);
 
         // Devuelve Calendar
         return calendar;
@@ -312,17 +358,63 @@ public class UtilesEntrada {
 
     // Consola >> Calendar (Locale ESP)
     public static final Calendar leerDatoTemporal(
-            String patron, String msgUsr, String msgErr) {
-        return leerDatoTemporal(patron, LCL, msgUsr, msgErr);
+            String patron, String msgUsr, String msgErr, boolean modoEstrictoOK) {
+        return leerDatoTemporal(patron, LCL, msgUsr, msgErr, modoEstrictoOK);
     }
 
     // Consola >> Fecha
     public static final Calendar leerFecha(String msgUsr, String msgErr) {
-        return leerDatoTemporal(FORMATO_FECHA01, msgUsr, msgErr);
+        return leerDatoTemporal(FORMATO_FECHA01, msgUsr, msgErr, true);
+    }
+
+    // Consola >> Fecha
+    public static final Calendar leerFecha(String msgUsr) {
+        return leerFecha(msgUsr, MSG_ERR);
     }
 
     // Consola >> Hora
     public static final Calendar leerHora(String msgUsr, String msgErr) {
-        return leerDatoTemporal(FORMATO_HORA01, msgUsr, msgErr);
+        return leerDatoTemporal(FORMATO_HORA01, msgUsr, msgErr, true);
+    }
+
+    // Consola >> Hora
+    public static final Calendar leerHora(String msgUsr) {
+        return leerHora(msgUsr, MSG_ERR);
+    }
+
+    // Pausa + MSG >> INTRO
+    public static final void hacerPausa(String msgUsr) {
+        System.out.println("---");
+        System.out.println(msgUsr);
+        hacerPausa();
+    }
+
+    // Pausa >> INTRO
+    public static final void hacerPausa() {
+        System.out.println("---");
+        System.out.print("Pulse INTRO para continuar ...");
+        SCN.nextLine();
+        System.out.println("---");
+    }
+
+    // Confirmación S/N + Defecto > Boolean
+    public static final boolean confirmarProceso(String msgUsr, boolean defectoOK) {
+        // Semáforo
+        boolean confirmacionOK = defectoOK;
+
+        // Consola > Caracter
+        String entrada = leerTexto(msgUsr);
+
+        // Analisis Entrada
+        if (entrada.length() > 0) {
+            // Entrada > Caracter 1
+            char c = entrada.charAt(0);
+
+            // Caracter [Ss | Nn] > Boolean
+            confirmacionOK = "Ss".contains(c + "");
+        }
+
+        // Devolución Confirmación
+        return confirmacionOK;
     }
 }
