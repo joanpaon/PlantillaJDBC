@@ -27,7 +27,7 @@ import org.japo.java.libraries.UtilesEntrada;
  *
  * @author José A. Pacheco Ondoño - joanpaon@gmail.com
  */
-public class DataAccessManager {
+public final class DataAccessManager {
 
     // Sentencias SQL - Módulos
     public static final String DEF_MOD_SQL1 = "SELECT * FROM modulo";
@@ -44,7 +44,7 @@ public class DataAccessManager {
             + "(id, acronimo, nombre, codigo, horasCurso, curso) "
             + "VALUES "
             + "(?, ?, ?, ?, ?, ?)";
-    
+
     // Sentencias SQL - Alumnos
     public static final String DEF_ALU_SQL1 = "SELECT * FROM alumno";
 
@@ -395,7 +395,7 @@ public class DataAccessManager {
         System.out.println(filas + " fila/s insertadas/s");
     }
 
-    // Inserción Módulos - Interactivo 
+    // Inserción Módulos - Interactivo
     public final void insertar() throws SQLException {
         // Mensaje de inicio de Inserción
         System.out.println("Inserción de módulos ...");
