@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 José A. Pacheco - japolabs@gmail.com.
+ * Copyright 2024 José A. Pacheco - japolabs@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,36 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.app;
+package org.japo.java.dam;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
-import org.japo.java.dam.DAM;
 
 /**
  *
  * @author José A. Pacheco - japolabs@gmail.com
  */
-public final class App {
+public final class DAM {
 
     // Propiedades
     private final Properties prp;
 
-    // Conexión con Base de Datos
-    private final DAM dam;
+    // Conexión BD
+    private final Connection conn;
+    private final Statement stmt;
 
     // Entidades DAM
-//
-    // Constructor Parametrizado
-    public App(Properties prp, DAM dam) {
-        // Estado App
+    //
+    public DAM(Properties prp) throws SQLException {
+        // Propiedades Aplicación
         this.prp = prp;
-        this.dam = dam;
 
-        // Referencia Entidades DAM
+        // Acceso BD
+        this.conn = UtilesDAM.conectar(prp);
+        this.stmt = UtilesDAM.vincular(conn, prp);
+
+        // Entidades DAM
+        //
     }
 
-    // Lógica de negocio
-    public final void launchApp() throws Exception {
-        // Lógica de negocio
+    // Cerrar Base de Datos
+    public final void cerrar() throws SQLException {
+        UtilesDAM.cerrar(conn, stmt);
     }
+
+    // Accesores Entidades DAM
 }

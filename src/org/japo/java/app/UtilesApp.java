@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 José A. Pacheco - japolabs@gmail.com.
+ * Copyright 2024 José A. Pacheco - japolabs@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,34 +15,12 @@
  */
 package org.japo.java.app;
 
-import java.util.Properties;
-import org.japo.java.dam.DAM;
-
 /**
  *
  * @author José A. Pacheco - japolabs@gmail.com
  */
-public final class App {
+public final class UtilesApp {
 
-    // Propiedades
-    private final Properties prp;
-
-    // Conexión con Base de Datos
-    private final DAM dam;
-
-    // Entidades DAM
-//
-    // Constructor Parametrizado
-    public App(Properties prp, DAM dam) {
-        // Estado App
-        this.prp = prp;
-        this.dam = dam;
-
-        // Referencia Entidades DAM
-    }
-
-    // Lógica de negocio
-    public final void launchApp() throws Exception {
-        // Lógica de negocio
+    private UtilesApp() {
     }
 }

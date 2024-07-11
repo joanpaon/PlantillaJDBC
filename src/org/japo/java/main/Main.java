@@ -1,4 +1,4 @@
-/*
+/* 
  * Copyright 2019 José A. Pacheco Ondoño - joanpaon@gmail.com.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,9 +15,11 @@
  */
 package org.japo.java.main;
 
+import java.sql.SQLException;
 import java.util.Properties;
 import org.japo.java.app.App;
-import org.japo.java.libraries.UtilesApp;
+import org.japo.java.dam.DAM;
+import org.japo.java.libraries.UtilesPRP;
 
 /**
  *
@@ -25,28 +27,38 @@ import org.japo.java.libraries.UtilesApp;
  */
 public final class Main {
 
-    // Clave de Acceso
-    private static final String ACCESS_UID = "JAPO-Omicron-0";
-
+    // Constructor Inaccesible
     private Main() {
-
     }
 
-    // Punto de Entrado al Programa
-    public static final void main(String[] args) {
-        if (args.length == 1 && args[0].equals(ACCESS_UID)) {
-            // Fichero > Properties
-            Properties prp = UtilesApp.importarPropiedadesRecurso();
+    // Punto de Entrada al Programa
+    public static void main(String[] args) {
+        try {
+            if (UtilesMain.validarAcceso(args)) {
+                // Objeto Properties
+                Properties prp = new Properties();
 
-            // Creación App
-            final App APP = new App(prp);
+                // Fichero + Recursos > Propiedades
+                UtilesPRP.importarPropiedades(prp);
 
-            // Ejecución App
-            APP.launchApp();
-        } else {
-            System.out.println("Acceso Denegado");
-            System.out.println("---");
-            System.out.println("Contacte con el servicio Técnico");
+                // Propiedades > Conexión Base de Datos
+                DAM dam = new DAM(prp);
+
+                // Objeto Lógica de Negocio
+                App app = new App(prp, dam);
+
+                // Lanzar aplicacion
+                app.launchApp();
+
+                // Cerrar Base de Datos
+                dam.cerrar();
+            } else {
+                UtilesMain.depurar();
+            }
+        } catch (SQLException e) {
+            UtilesMain.depurar(e);
+        } catch (Exception e) {
+            UtilesMain.depurar(e);
         }
     }
 }

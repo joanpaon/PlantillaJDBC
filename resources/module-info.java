@@ -13,31 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.japo.java.libraries;
 
-/**
- *
- * @author José A. Pacheco - japolabs@gmail.com
- */
-public final class UtilesValidacion {
-
-    // Constructor Predeterminado ( Oculto )
-    private UtilesValidacion() {
-    }
-
-    // Dato + Expresión Regular > Validación
-    public static final boolean validar(String dato, String er) {
-        // Referencia
-        boolean testOK;
-
-        // Validación
-        try {
-            testOK = dato.matches(er);
-        } catch (Exception e) {
-            testOK = false;
-        }
-
-        // Retorno
-        return testOK;
-    }
+module JAPOLabs {
+    requires java.sql;
+    requires org.mariadb.jdbc;
+    requires waffle.jna;
 }
