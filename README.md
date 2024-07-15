@@ -1,12 +1,10 @@
 <pre>
 
 Project .....: PlantillaJDBC
-Description .: Plantilla para realizar Proyectos JDBC simples
-               utilizando la BD MariaDB, incluida en el paquete 
-               XAMPP, con salida en Consola y utilizando el IDE
-               NetBeans
+Description .: Template for Console + JDBC small Java Projects 
+               with NetBeans IDE and XAMPP Stack
 Creation ....: 27/02/2018
-Update ......: 11/07/2024
+Update ......: 15/07/2024
 Author ......: José A. Pacheco Ondoño - joanpaon@gmail.com
 Language ....: Java 21 LTS
 IDE .........: NetBeans 22
@@ -28,12 +26,12 @@ there is a database called: test. This is only for checking
 purposes. You should change for the one you want. Including
 DTO Entities according to tables defined inside.
 
-You MUST provide the token: JAPO-Omicron-0, as
+~~You MUST provide the token: JAPO-Omicron-0, as
 the command line run only parameter in the project 
 Properties>Run>Arguments. 
 
 You can define a custom config for that called JAPO, if you 
-want. ;)
+want. ;)~~
 
 Have fun!
 
