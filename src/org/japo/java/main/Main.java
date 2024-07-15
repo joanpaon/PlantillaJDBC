@@ -34,13 +34,13 @@ public final class Main {
     // Punto de Entrada al Programa
     public static void main(String[] args) {
         try {
-            if (UtilesMain.validarAcceso(args)) {
-                // Objeto Properties
-                Properties prp = new Properties();
+            // Objeto Properties
+            Properties prp = new Properties();
 
-                // Fichero + Recursos > Propiedades
-                UtilesPRP.importarPropiedades(prp);
+            // Fichero + Recursos > Propiedades
+            UtilesPRP.importarPropiedades(prp);
 
+            if (UtilesMain.validarAcceso(args, prp)) {
                 // Propiedades > Conexión Base de Datos
                 DAM dam = new DAM(prp);
 

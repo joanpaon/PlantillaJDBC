@@ -16,6 +16,7 @@
 package org.japo.java.main;
 
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  *
@@ -23,8 +24,12 @@ import java.sql.SQLException;
  */
 final class UtilesMain {
 
-    // Clave de Acceso
-    private static final String ACCESS_UID = "JAPO-Omicron-0";
+    // Propiedades
+    private static final String PRP_RUN_TOKEN_VALUE = "run.token.value";
+    private static final String PRP_RUN_TOKEN_DISABLED = "run.token.disabled";
+
+    // Clave de Acceso - Por defecto
+    private static final String DEF_RUN_TOKEN_VALUE = "JAPO-Omicron-0";
 
     // Mensaje de Acceso Denegado
     static final String MSG_ACCESS_DENIED = """
@@ -42,13 +47,38 @@ final class UtilesMain {
 
         // Validación
         try {
-            testOK = args[0].equals(ACCESS_UID);
+            testOK = args[0].equals(DEF_RUN_TOKEN_VALUE);
         } catch (Exception e) {
             testOK = false;
         }
 
         // Retorno
 //        testOK = true;
+        return testOK;
+    }
+
+    // Argumentos + Propiedades > Validar Acceso
+    static boolean validarAcceso(String[] args, Properties prp) {
+        // Referencia
+        boolean testOK;
+
+        // Validación
+        try {
+            // Paremetros de Acceso - Token Ejecución Desactivado
+            boolean runTokenDisabled = true
+                    && prp.getProperty(PRP_RUN_TOKEN_DISABLED) != null
+                    && prp.getProperty(PRP_RUN_TOKEN_DISABLED).equals("true");
+
+            // Paremetros de Acceso - Valor del Token Ejecución
+            String runTokenValue = prp.getProperty(PRP_RUN_TOKEN_VALUE, DEF_RUN_TOKEN_VALUE);
+            
+            // Utilización del Token de Ejecución
+            testOK = runTokenDisabled ? true : args[0].equals(runTokenValue);
+        } catch (Exception e) {
+            testOK = false;
+        }
+
+        // Retorno
         return testOK;
     }
 
