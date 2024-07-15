@@ -26,12 +26,12 @@ there is a database called: test. This is only for checking
 purposes. You should change for the one you want. Including
 DTO Entities according to tables defined inside.
 
-~~You MUST provide the token: JAPO-Omicron-0, as
+<del>You MUST provide the token: JAPO-Omicron-0, as
 the command line run only parameter in the project 
-Properties>Run>Arguments. 
+Properties>Run>Arguments.</del>
 
-You can define a custom config for that called JAPO, if you 
-want. ;)~~
+<del>You can define a custom config for that called JAPO, if you 
+want. ;)</del>
 
 Have fun!
 
